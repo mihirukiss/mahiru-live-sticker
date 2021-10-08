@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         孟宝直播间表情选择器
 // @namespace    https://mihiru.com/
-// @version      1.0
+// @version      1.1
 // @description  提供在B站Mahiru直播间直接点选输入表情的功能
 // @author       MM
 // @match        *://live.bilibili.com/*
