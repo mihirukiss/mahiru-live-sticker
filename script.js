@@ -4,7 +4,7 @@
 // @version      1.0
 // @description  提供在B站Mahiru直播间直接点选输入表情的功能
 // @author       MM
-// @match        *://live.bilibili.com/21672024*
+// @match        *://live.bilibili.com/*
 // @grant        none
 // @run-at       document-idle
 // ==/UserScript==
@@ -13,6 +13,23 @@
     'use strict';
 
     const init = function() {
+        const livers = [
+            "21672024", //Mahiru
+            "23260932" //Koxia
+        ]
+        const keywords = [
+            ['[call]','[tea]','015','差不多得了','哭晕在厕所','[err]','[钓鱼]','[咬钩]','绿帽','不也挺好吗','草','叹气','诶嘿','喜极而泣'],
+            ["?","给你一拳","怪死了","哈哈","好夜",'救命',"哭哭","要我一直哭吗","[震惊]","不愿面对"]
+        ]
+        const roomUrl = window.location.href;
+        const roomNo = roomUrl.match(/\d+/)
+        if (!roomNo || roomNo.length < 1) {
+            return
+        }
+        const liver = livers.indexOf(roomNo[0])
+        if (liver < 0) {
+            return
+        }
         let iconLeftPart = document.querySelector('.icon-left-part')
         if (!iconLeftPart) {
             new MutationObserver((mutations,observer) => {
@@ -28,7 +45,6 @@
             })
             return
         }
-        const keywords = ['[call]','[tea]','015','差不多得了','哭晕在厕所','[err]','[钓鱼]','[咬钩]','绿帽','不也挺好吗','草','叹气','诶嘿','喜极而泣']
         const chatInput = document.querySelector('textarea.chat-input')
         let dataAttributeName;
         for(let name of iconLeftPart.getAttributeNames()) {
@@ -67,11 +83,12 @@
             chatInput.value = chatInput.value + e.currentTarget.dataset.keyword
             chatInput.dispatchEvent(new Event('input', {"bubbles":true, "cancelable":true}))
         }
-        for (let i=0;i<keywords.length;i++) {
+        for (let i=0;i<keywords[liver].length;i++) {
             const emojiImg = document.createElement('img')
-            emojiImg.src = 'https://cdn.mihiru.com/img/' + (2000 + i) + (keywords[i].startsWith('[')?'.gif' : '.png')
-            emojiImg.setAttribute('data-keyword', keywords[i].startsWith('[') ? keywords[i] : ('[' + keywords[i] + ']'))
+            emojiImg.src = 'https://cdn.mihiru.com/img/' + (liver * 1000 + 2000 + i) + (keywords[liver][i].startsWith('[')?'.gif' : '.png')
+            emojiImg.setAttribute('data-keyword', keywords[liver][i].startsWith('[') ? keywords[liver][i] : ('[' + keywords[liver][i] + ']'))
             emojiImg.onclick = emojiClick
+            emojiImg.style.margin = '2px'
             dialog.append(emojiImg)
         }
         dialog.addEventListener('mouseenter', e=>{
