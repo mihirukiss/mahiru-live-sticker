@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         孟宝直播间表情选择器
 // @namespace    https://mihiru.com/
-// @version      1.2
+// @version      1.3
 // @description  提供在B站Mahiru直播间直接点选输入表情的功能
 // @author       MM
 // @match        *://live.bilibili.com/*
@@ -21,6 +21,7 @@
             ['[call]','[tea]','015','差不多得了','哭晕在厕所','[err]','[钓鱼]','[咬钩]','绿帽','不也挺好吗','草','叹气','诶嘿','喜极而泣'],
             ["?","给你一拳","怪死了","哈哈","好夜",'救命',"哭哭","要我一直哭吗","[震惊]","不愿面对","[可恶]","[来两拳]","[吃kuya]","[流口水]","趴","[思考]","[萌新坐姿]","[呜呜]","[赞]"]
         ]
+        const dialogWidth = [300, 380]
         const roomUrl = window.location.href;
         const roomNo = roomUrl.match(/\d+/)
         if (!roomNo || roomNo.length < 1) {
@@ -75,21 +76,26 @@
         dialog.style.position = 'absolute'
         dialog.style.zIndex = '699'
         dialog.style.transformOrigin = '42px bottom'
-        dialog.style.width = '280px'
-        dialog.style.margin = '0px 0px 0px -140px'
-        dialog.style.left = '50%'
+        dialog.style.width = dialogWidth[liver] + 'px'
+        dialog.style.margin = '0px 0px 0px -' + (dialogWidth[liver]-292) + 'px'
         dialog.style.display = 'none'
         const emojiClick = function(e) {
             chatInput.value = chatInput.value + e.currentTarget.dataset.keyword
             chatInput.dispatchEvent(new Event('input', {"bubbles":true, "cancelable":true}))
         }
         for (let i=0;i<keywords[liver].length;i++) {
-            const emojiImg = document.createElement('img')
-            emojiImg.src = 'https://cdn.mihiru.com/img/' + (liver * 1000 + 2000 + i) + (keywords[liver][i].startsWith('[')?'.gif' : '.png')
-            emojiImg.setAttribute('data-keyword', keywords[liver][i].startsWith('[') ? keywords[liver][i] : ('[' + keywords[liver][i] + ']'))
-            emojiImg.onclick = emojiClick
-            emojiImg.style.margin = '2px'
-            dialog.append(emojiImg)
+            const stickerSpan = document.createElement('span')
+            stickerSpan.style.margin = '0'
+            stickerSpan.style.padding = '0'
+            stickerSpan.title = keywords[liver][i].replaceAll('[', '').replaceAll(']', '')
+            const stickerImg = document.createElement('img')
+            stickerImg.src = 'https://cdn.mihiru.com/img/' + (liver * 1000 + 2000 + i) + (keywords[liver][i].startsWith('[')?'.gif' : '.png')
+            stickerImg.setAttribute('data-keyword', '[' + stickerSpan.title + ']')
+            stickerImg.onclick = emojiClick
+            stickerImg.style.margin = '2px'
+            stickerImg.alt = stickerSpan.title
+            stickerSpan.append(stickerImg)
+            dialog.append(stickerSpan)
         }
         dialog.addEventListener('mouseenter', e=>{
             mouseOnDialog = true
