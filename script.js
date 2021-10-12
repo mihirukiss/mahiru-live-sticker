@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         孟宝直播间表情选择器
 // @namespace    https://mihiru.com/
-// @version      1.3
+// @version      1.4
 // @description  提供在B站Mahiru直播间直接点选输入表情的功能
 // @author       MM
 // @match        *://live.bilibili.com/*
@@ -22,7 +22,7 @@
             ["?","给你一拳","怪死了","哈哈","好夜",'救命',"哭哭","要我一直哭吗","[震惊]","不愿面对","[可恶]","[来两拳]","[吃kuya]","[流口水]","趴","[思考]","[萌新坐姿]","[呜呜]","[赞]"]
         ]
         const dialogWidth = [300, 380]
-        const roomUrl = window.location.href;
+        const roomUrl = window.location.href
         const roomNo = roomUrl.match(/\d+/)
         if (!roomNo || roomNo.length < 1) {
             return
@@ -87,9 +87,14 @@
             const stickerSpan = document.createElement('span')
             stickerSpan.style.margin = '0'
             stickerSpan.style.padding = '0'
-            stickerSpan.title = keywords[liver][i].replaceAll('[', '').replaceAll(']', '')
+            const isGif = keywords[liver][i].charAt(0) == '['
+            if (isGif) {
+                stickerSpan.title = keywords[liver][i].substring(1, keywords[liver][i].length - 1)
+            } else {
+                stickerSpan.title = keywords[liver][i]
+            }
             const stickerImg = document.createElement('img')
-            stickerImg.src = 'https://cdn.mihiru.com/img/' + (liver * 1000 + 2000 + i) + (keywords[liver][i].startsWith('[')?'.gif' : '.png')
+            stickerImg.src = 'https://cdn.mihiru.com/img/' + (liver * 1000 + 2000 + i) + (isGif ?'.gif' : '.png')
             stickerImg.setAttribute('data-keyword', '[' + stickerSpan.title + ']')
             stickerImg.onclick = emojiClick
             stickerImg.style.margin = '2px'
