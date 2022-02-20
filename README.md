@@ -5,6 +5,7 @@
 目前支持[真绯瑠Mahiru](https://live.bilibili.com/21672024)与[恋诗夜Koxia](https://live.bilibili.com/23260932)的直播间
 
 # 更新历史
+* 1.11 提刀
 * 1.10 更新恋诗夜直播间表情
 * 1.9 真总哭哭
 * 1.8 霸道孟总
