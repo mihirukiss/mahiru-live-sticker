@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         孟宝直播间表情选择器
 // @namespace    https://mihiru.com/
-// @version      1.11
+// @version      1.12
 // @description  提供在B站Mahiru直播间直接点选输入表情的功能
 // @author       MM
 // @match        *://live.bilibili.com/*
@@ -172,5 +172,14 @@
         iconLeftPart.append(icon)
     }
 
-    init()
+    const waitInit = function() {
+        const chatInput = document.querySelector('textarea.chat-input')
+        if (chatInput) {
+            init()
+        } else {
+            setTimeout(() => waitInit(), 100)
+        }
+    }
+
+    waitInit()
 })();
